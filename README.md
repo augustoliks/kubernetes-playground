@@ -51,3 +51,4 @@ ubectl rollout history deployment.v1.apps/go-ws-deployment --revision=2
 kubectl rollout undo deployment.v1.apps/go-ws-deployment --to-revision=3 
 kubectl port-forward service/go-ws-service 8080:8090
 ```
+
