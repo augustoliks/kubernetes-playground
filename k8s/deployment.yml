@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-ws-deployment
+  labels:
+    app: go-ws-label
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-ws-label
+  template:
+    metadata:
+      labels:
+        app: go-ws-label
+    spec:
+      containers:
+      - name: go-webserver
+        imagePullPolicy: Never
+        image: go-ws:v2
+        ports:
+        - containerPort: 8080
