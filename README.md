@@ -1,6 +1,6 @@
 # kubernetes-hello-world
 
-Kubernetes studies annotations.
+Annontations of the Kubernetes studies.
 
 My workstation it's composed by:
 
