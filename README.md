@@ -121,3 +121,107 @@ Expose SERVICE ports
 ```bash
 kubectl port-forward services/<service-name> 
 ```
+
+Get ReplicaSet details
+
+```bash
+kubectl describe rs kuard
+```
+
+Check POD owner references
+
+```bash
+kubectl get pods kuard-xccrl -o yaml | grep -A 10 ownerReferences
+```
+
+Scale Replicas (imperative way)
+
+```bash
+kubectl scale replicaset <replicaset-name> --replicas=4 
+```
+
+Enable Autoscale (HPA), 2..5 replicas by 80% cpu usage
+
+```bash
+kubectl autoscale rs kuard --min=2 --max=5 --cpu-percent=80
+```
+
+Get deployment labels
+
+```bash
+kubectl get deployments kuard -o jsonpath --template {.spec.selector.matchLabels}
+```
+
+Filter Replica Set by label
+
+```bash
+kubectl get replicasets -l run=kuard
+```
+
+Backup deployment
+
+```bash
+kubectl get deployment <deployment-name> -o yaml > bkp-deploy.yaml
+kubectl replace -f <deployment-file .yml> --save-config
+```
+
+
+Get rollout history
+
+```bash
+$ kubectl rollout history deployment kuard 
+
+
+deployment.apps/kuard 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         update to green kuard
+
+```
+
+> __note__: _'update to green kuard'_ message it's define in deployment manifest (.yml) annontation
+
+```yaml
+spec:
+
+...
+
+  template:
+    metadata:
+      annotations:
+        kubernetes.io/change-cause: "update to green kuard"
+```
+
+Get rollout informations of the specific version
+
+```bash
+$ kubectl rollout history deployment kuard --revision=2
+
+
+deployment.apps/kuard with revision #2
+Pod Template:
+  Labels:	pod-template-hash=5789685c8d
+	run=kuard
+  Annotations:	kubernetes.io/change-cause: update to green kuard
+  Containers:
+   kuard:
+    Image:	gcr.io/kuar-demo/kuard-amd64:green
+    Port:	<none>
+    Host Port:	<none>
+    Environment:	<none>
+    Mounts:	<none>
+  Volumes:	<none>
+```
+
+Undo rollout
+
+```bash
+kubectl rollout undo deployments kuard
+```
+
+Rollout to specific version
+
+```bash
+kubectl rollout undo deployment kuard --to-revision=3
+```
+
