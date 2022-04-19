@@ -1,29 +1,8 @@
-# kubernetes-hello-world
+# kubernetes-playground
 
-Annontations of the Kubernetes studies.
+My studies of the Kubernetes.
 
-My workstation it's composed by:
-
-- Fedora 35
-- kubectl
-- nerdctl
-- containerd
-- containernetworking-plugins
-- kvm2
-
-## Commands
-
-Create cluster with Minikube.
-
-```bash
-$ minikube start --container-runtime=containerd --driver=kvm2 --nodes=3
-```
-
-Autocomplete 
-
-```bash
-echo 'source <(kubectl completion bash)' >> ~/.bashrc
-```
+## Cheat Sheet
 
 List contexts
 
@@ -34,24 +13,13 @@ kubectl kubecconfig get-contexts
 Change context
 
 ```bash
-kubectx CONTEXT
+kubectx <context-name>
 ```
 
-Cluster status
-
-```bash
-kubectl get componentstatuses
-```
-
-Get nodes:
+Get nodes
 
 ```bash
 kubectl get nodes
-
-NAME           STATUS   ROLES                  AGE    VERSION
-minikube       Ready    control-plane,master   2m7s   v1.22.3
-minikube-m02   Ready    <none>                 73s    v1.22.3
-minikube-m03   Ready    <none>                 29s    v1.22.3
 ```
 
 Get more information
@@ -80,13 +48,13 @@ kubectl label pods bar color=blue --overwrite
 kubectl label pods bar color-
 ```
 
-list containers in POD
+List containers in POD
 
 ```bash
 kubectl get pods <pod-name> -o jsonpath='{.spec.containers[*].name}'
 ```
 
-view container log in POD
+View container log in POD
 
 ```bash
 kubectl logs <pod-name> -c <container-name> -f
@@ -98,7 +66,7 @@ Exec command in containers
 kubectl exec -it <pod-name> -- bash
 ```
 
-follow main process in POD (like logs, but with stdin available)
+Follow main process in POD (like logs, but with stdin available)
 
 ```bash
 kubectl attach -it <pod-name>
@@ -131,13 +99,13 @@ kubectl describe rs kuard
 Check POD owner references
 
 ```bash
-kubectl get pods kuard-xccrl -o yaml | grep -A 10 ownerReferences
+kubectl get pods <pod> -o yaml | grep -A 10 ownerReferences
 ```
 
 Scale Replicas (imperative way)
 
 ```bash
-kubectl scale replicaset <replicaset-name> --replicas=4 
+kubectl scale replicaset <replicaset> --replicas=4 
 ```
 
 Enable Autoscale (HPA), 2..5 replicas by 80% cpu usage
@@ -165,52 +133,18 @@ kubectl get deployment <deployment-name> -o yaml > bkp-deploy.yaml
 kubectl replace -f <deployment-file .yml> --save-config
 ```
 
-
 Get rollout history
 
 ```bash
-$ kubectl rollout history deployment kuard 
-
-
-deployment.apps/kuard 
-REVISION  CHANGE-CAUSE
-1         <none>
-2         update to green kuard
-
+kubectl rollout history deployment kuard 
 ```
 
-> __note__: _'update to green kuard'_ message it's define in deployment manifest (.yml) annontation
-
-```yaml
-spec:
-
-...
-
-  template:
-    metadata:
-      annotations:
-        kubernetes.io/change-cause: "update to green kuard"
-```
+> To add change cause, add value to `spec.template.metadata.annotations.kubernetes.io/change-cause`
 
 Get rollout informations of the specific version
 
 ```bash
-$ kubectl rollout history deployment kuard --revision=2
-
-
-deployment.apps/kuard with revision #2
-Pod Template:
-  Labels:	pod-template-hash=5789685c8d
-	run=kuard
-  Annotations:	kubernetes.io/change-cause: update to green kuard
-  Containers:
-   kuard:
-    Image:	gcr.io/kuar-demo/kuard-amd64:green
-    Port:	<none>
-    Host Port:	<none>
-    Environment:	<none>
-    Mounts:	<none>
-  Volumes:	<none>
+kubectl rollout history deployment kuard --revision=2
 ```
 
 Undo rollout
@@ -224,4 +158,3 @@ Rollout to specific version
 ```bash
 kubectl rollout undo deployment kuard --to-revision=3
 ```
-
