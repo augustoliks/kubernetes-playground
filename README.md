@@ -1,6 +1,39 @@
 # kubernetes-playground
 
-My studies of the Kubernetes.
+My K8S Kubernetes playground :rocket:
+
+## Install Rancher Desktop on Fedora 35
+
+```bash
+$ yum update -y 
+```
+
+Download yum repo file of the Rancher Desktop:
+
+```bash
+$ curl https://download.opensuse.org/repositories/isv:/Rancher:/stable/rpm/isv:Rancher:stable.repo -o /etc/yum.repos.d/_rancher-desktop.repo 
+```
+
+Install Fedora virtualizations drivers:
+
+```bash
+$ dnf install @virtualization -y
+$ dnf group install --with-optional virtualization
+$ systemctl start libvirtd
+$ systemctl enable libvirtd
+```
+
+Update yum cache
+
+```bash
+$ yum makecache
+```
+
+Install rancher-desktop
+
+```bash
+$ yum install rancher-desktop
+```
 
 ## Cheat Sheet
 
