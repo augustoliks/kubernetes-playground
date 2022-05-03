@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-ws-deployment
+  name: nginx-deployment
   labels:
-    app: go-ws-label
+    app: nginx
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: go-ws-label
+      app: nginx
   template:
     metadata:
       labels:
-        app: go-ws-label
+        app: nginx
     spec:
       containers:
-      - name: go-webserver
+      - name: nginx
         imagePullPolicy: Never
-        image: go-ws:v2
+        image: nginx
         ports:
-        - containerPort: 8080
+        - containerPort: 80
